@@ -38,8 +38,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case 'login':
       return MaterialPageRoute(builder: (_) => const Login());
     case 'authentication':
-      return MaterialPageRoute(
-          builder: (_) => const ApplicationAuthentication());
+      return MaterialPageRoute(builder: (_) => const ApplicationAuthentication());
     case 'client':
       return MaterialPageRoute(builder: (_) => const PosClient());
     case 'select_mode':
@@ -49,8 +48,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     default:
       return MaterialPageRoute(
           builder: (_) => Scaffold(
-                body: Center(
-                    child: Text('No route defined for ${settings.name}')),
+                body: Center(child: Text('No route defined for ${settings.name}')),
               ));
   }
 }
@@ -87,49 +85,25 @@ Future<void> mainApp() async {
   }
 
   if (global.displayMachine == global.DisplayMachineEnum.posTerminal) {
-    global.posSaleChannelList
-        .add(PosSaleChannelModel(code: 'XXX', name: 'ขายหน้าร้าน'));
+    global.posSaleChannelList.add(PosSaleChannelModel(code: 'XXX', name: 'ขายหน้าร้าน'));
+    global.posSaleChannelList.add(PosSaleChannelModel(code: 'GRAB', name: 'Grab', logoUrl: "https://seeklogo.com/images/G/grab-logo-7020E74857-seeklogo.com.png"));
+    global.posSaleChannelList.add(PosSaleChannelModel(code: 'PANDA', name: 'Food Panda', logoUrl: "https://promocodes.my/wp-content/uploads/2022/06/foodpanda-logo-1-350x350.png"));
+    global.posSaleChannelList.add(PosSaleChannelModel(code: 'LINEMAN', name: 'LINE MAN', logoUrl: "https://mallika.co.th/wp-content/uploads/2022/05/Logo-Lineman-c.png"));
     global.posSaleChannelList.add(PosSaleChannelModel(
-        code: 'GRAB',
-        name: 'Grab',
-        logoUrl:
-            "https://seeklogo.com/images/G/grab-logo-7020E74857-seeklogo.com.png"));
-    global.posSaleChannelList.add(PosSaleChannelModel(
-        code: 'PANDA',
-        name: 'Food Panda',
-        logoUrl:
-            "https://promocodes.my/wp-content/uploads/2022/06/foodpanda-logo-1-350x350.png"));
-    global.posSaleChannelList.add(PosSaleChannelModel(
-        code: 'LINEMAN',
-        name: 'LINE MAN',
-        logoUrl:
-            "https://mallika.co.th/wp-content/uploads/2022/05/Logo-Lineman-c.png"));
-    global.posSaleChannelList.add(PosSaleChannelModel(
-        code: 'LALAMOVE',
-        name: 'LALA MOVE',
-        logoUrl:
-            "https://www.americanexpress.com/content/dam/amex/hk/shared/Offer-hub/GCS-2021-060-Lalamove-logo_470-x-350_EN02_150dpi.jpg"));
+        code: 'LALAMOVE', name: 'LALA MOVE', logoUrl: "https://www.americanexpress.com/content/dam/amex/hk/shared/Offer-hub/GCS-2021-060-Lalamove-logo_470-x-350_EN02_150dpi.jpg"));
     await global.startLoading();
     // (await global.getDeviceId() == 'ABABA0AA-F156-4FF2-8AB0-DD25B7348819');
     server.startServer();
     runApp(
       MultiBlocProvider(
         providers: [
-          BlocProvider(
-              create: (context) => FindItemByCodeNameBarcodeBloc(
-                  apiFindItemByCodeNameBarcode:
-                      RestApiFindItemByCodeNameBarcode())),
-          BlocProvider(
-              create: (context) => FindMemberByTelNameBloc(
-                  apiFindMemberByTelName: RestApiFindMemberByTelName())),
-          BlocProvider(
-              create: (context) => FindEmployeeByNameBloc(
-                  apiFindEmployeeByName: RestApiFindEmployeeByWord())),
+          BlocProvider(create: (context) => FindItemByCodeNameBarcodeBloc(apiFindItemByCodeNameBarcode: RestApiFindItemByCodeNameBarcode())),
+          BlocProvider(create: (context) => FindMemberByTelNameBloc(apiFindMemberByTelName: RestApiFindMemberByTelName())),
+          BlocProvider(create: (context) => FindEmployeeByNameBloc(apiFindEmployeeByName: RestApiFindEmployeeByWord())),
           BlocProvider(create: (context) => BillBloc()),
           BlocProvider(create: (context) => PayScreenBloc()),
           BlocProvider(create: (context) => ServerBloc()),
-          BlocProvider(
-              create: (context) => ProductCategoryBloc(categoryGuid: '')),
+          BlocProvider(create: (context) => ProductCategoryBloc(categoryGuid: '')),
         ],
         child: MaterialApp(
           onGenerateRoute: generateRoute,
@@ -150,32 +124,27 @@ Future<void> mainApp() async {
     global.informationList.add(InformationModel(
       mode: 1,
       delaySecond: 60 * 5,
-      sourceUrl:
-          "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+      sourceUrl: "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
     ));
     global.informationList.add(InformationModel(
       mode: 1,
       delaySecond: 60 * 5,
-      sourceUrl:
-          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      sourceUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
     ));
     global.informationList.add(InformationModel(
       mode: 1,
       delaySecond: 60 * 5,
-      sourceUrl:
-          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+      sourceUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
     ));
     global.informationList.add(InformationModel(
       mode: 0,
       delaySecond: 10,
-      sourceUrl:
-          "https://i.pinimg.com/originals/3c/33/31/3c333137070fb1a0fa346b0eee0f3084.gif",
+      sourceUrl: "https://i.pinimg.com/originals/3c/33/31/3c333137070fb1a0fa346b0eee0f3084.gif",
     ));
     global.informationList.add(InformationModel(
       mode: 0,
       delaySecond: 10,
-      sourceUrl:
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/JPEG_compression_Example.jpg/800px-JPEG_compression_Example.jpg",
+      sourceUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/JPEG_compression_Example.jpg/800px-JPEG_compression_Example.jpg",
     ));
     global.informationList.add(InformationModel(
       mode: 0,

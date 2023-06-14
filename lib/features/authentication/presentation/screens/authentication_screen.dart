@@ -20,10 +20,8 @@ class AuthenticationPage extends StatefulWidget {
 }
 
 class _AuthenticationPageState extends State<AuthenticationPage> {
-  final TextEditingController _emailController =
-      TextEditingController(text: '');
-  final TextEditingController _passwordController =
-      TextEditingController(text: '');
+  final TextEditingController _emailController = TextEditingController(text: '');
+  final TextEditingController _passwordController = TextEditingController(text: '');
 
   Color vfPrimaryColor = const Color(0xFF007BFF);
   @override
@@ -55,11 +53,14 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                 listener: (context, state) {
                   if (state is AuthenticationLoadedState) {
                     //context.router.push(const SelectShopRoute());
-                    context.router.pushAndPopUntil(const SelectShopRoute(),
-                        predicate: (route) => false);
+
+                    global.appStorage.write("apiUserName", _emailController.text);
+                    global.appStorage.write("apiUserPassword", _passwordController.text);
+                    global.appStorage.write("token", state.user.token);
+                    context.router.pushAndPopUntil(const SelectShopRoute(), predicate: (route) => false);
                   } else if (state is AuthenticationAuthenticatedState) {
-                    context.router.pushAndPopUntil(const InitShopRoute(),
-                        predicate: (route) => false);
+                    global.appStorage.write("token", state.user.token);
+                    context.router.pushAndPopUntil(const InitShopRoute(), predicate: (route) => false);
                   } else if (state is AuthenticationErrorState) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -68,8 +69,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                       ),
                     );
                   } else if (state is AuthenticationInitialState) {
-                    serviceLocator<Log>()
-                        .debug("stage change to AuthenticationInitialState");
+                    serviceLocator<Log>().debug("stage change to AuthenticationInitialState");
                   }
                 },
                 builder: (context, state) {
@@ -105,9 +105,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                       const SizedBox(height: 12.0),
                       buttonLoginWithApple(),
                       const SizedBox(height: 12.0),
-                      Visibility(
-                          visible: Environment().isDev,
-                          child: buttonLoginDev()),
+                      Visibility(visible: Environment().isDev, child: buttonLoginDev()),
                     ],
                   );
                 },
@@ -166,14 +164,11 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     return ElevatedButton.icon(
       onPressed: () {
         // on click
-        debugPrint(
-            'on login debug  ${_emailController.text} ${_passwordController.text}');
+        debugPrint('on login debug  ${_emailController.text} ${_passwordController.text}');
 
         final userName = _emailController.text;
         final password = _passwordController.text;
-        context.read<AuthenticationBloc>().add(
-            AuthenticationEvent.onLoginWithUserPasswordTapped(
-                userName: userName, password: password));
+        context.read<AuthenticationBloc>().add(AuthenticationEvent.onLoginWithUserPasswordTapped(userName: userName, password: password));
       },
       icon: const Icon(Icons.person),
       label: const Text('Login'),
@@ -236,11 +231,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
       padding: const EdgeInsets.only(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          horizontalLine(),
-          const Text(" OR "),
-          horizontalLine()
-        ],
+        children: <Widget>[horizontalLine(), const Text(" OR "), horizontalLine()],
       ),
     );
   }
@@ -256,23 +247,16 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
   void loginDev() {
     // authen with dev user,dev password
-    serviceLocator<LoginUserRepository>()
-        .loginWithUserPassword(
-            username: AppConstant.userDev, password: AppConstant.passwordDev)
-        .then((response) async {
+    serviceLocator<LoginUserRepository>().loginWithUserPassword(username: AppConstant.userDev, password: AppConstant.passwordDev).then((response) async {
       if (response.isRight()) {
         final remoteUser = response.getOrElse(() => User());
         await serviceLocator<UserCacheService>().saveUser(remoteUser);
 
         // select shop
-        serviceLocator<ShopAuthenticationRepository>()
-            .selectShop(shopid: AppConstant.shopIdDev)
-            .then((selectShopResponse) async {
+        serviceLocator<ShopAuthenticationRepository>().selectShop(shopid: AppConstant.shopIdDev).then((selectShopResponse) async {
           if (selectShopResponse.isRight()) {
             global.loginSuccess = true;
-            context
-                .read<AuthenticationBloc>()
-                .add(AuthenticationEvent.authenticated(user: remoteUser));
+            context.read<AuthenticationBloc>().add(AuthenticationEvent.authenticated(user: remoteUser));
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(

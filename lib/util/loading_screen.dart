@@ -15,22 +15,21 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Timer? timerSwitchToMenu;
 
   void init() async {
-    /*await global.appStorage.remove(global.syncPrinterTimeName);
-    await global.appStorage.remove(global.syncCategoryTimeName);
-    await global.appStorage.remove(global.syncInventoryTimeName);
-    await global.appStorage.remove(global.syncMemberTimeName);
-    await global.appStorage.remove(global.syncEmployeeTimeName);
-    await global.appStorage.remove(global.syncTableTimeName);
-    await global.appStorage.remove(global.syncTableZoneTimeName);
-    await global.appStorage.remove(global.syncDeviceTimeName);*/
+    // await global.appStorage.remove(global.syncPrinterTimeName);
+    // await global.appStorage.remove(global.syncCategoryTimeName);
+    // await global.appStorage.remove(global.syncInventoryTimeName);
+    // await global.appStorage.remove(global.syncMemberTimeName);
+    // await global.appStorage.remove(global.syncEmployeeTimeName);
+    // await global.appStorage.remove(global.syncTableTimeName);
+    // await global.appStorage.remove(global.syncTableZoneTimeName);
+    // await global.appStorage.remove(global.syncDeviceTimeName);
 
     if (global.appMode == global.AppModeEnum.posRemote) {
       Timer(const Duration(seconds: 1), () {
         Navigator.of(context).pushReplacementNamed('client');
       });
     } else {
-      timerSwitchToMenu =
-          Timer.periodic(const Duration(seconds: 1), (timer) async {
+      timerSwitchToMenu = Timer.periodic(const Duration(seconds: 1), (timer) async {
         if (global.loginSuccess && global.syncDataSuccess) {
           Navigator.of(context).pushReplacementNamed('menu');
         }

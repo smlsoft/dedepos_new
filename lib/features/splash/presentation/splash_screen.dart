@@ -2,6 +2,10 @@
 
 import 'package:auto_route/auto_route.dart';
 import 'package:dedepos/core/service_locator.dart';
+import 'package:dedepos/db/bank_helper.dart';
+import 'package:dedepos/db/employee_helper.dart';
+import 'package:dedepos/db/product_barcode_helper.dart';
+import 'package:dedepos/db/product_category_helper.dart';
 import 'package:dedepos/features/authentication/auth.dart';
 import 'package:dedepos/features/shop/presentation/bloc/select_shop_bloc.dart';
 import 'package:dedepos/features/splash/domain/usecase/check_user_login_status.dart';
@@ -24,15 +28,11 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      serviceLocator<CheckUserLoginStatus>()
-          .checkIfUserLoggedIn()
-          .then((isUserLoggedIn) async {
+      serviceLocator<CheckUserLoginStatus>().checkIfUserLoggedIn().then((isUserLoggedIn) async {
         if (isUserLoggedIn) {
           final user = await serviceLocator<UserCacheService>().getUser();
 
-          context
-              .read<AuthenticationBloc>()
-              .add(AuthenticationEvent.authenticated(user: user!));
+          context.read<AuthenticationBloc>().add(AuthenticationEvent.authenticated(user: user!));
 
           await global.appStorage.write("token", user.token);
           global.apiConnected = true;
@@ -40,23 +40,18 @@ class _SplashScreenState extends State<SplashScreen> {
           global.loginProcess = true;
           // global.apiConnected = true;
 
-          serviceLocator<CheckUserLoginStatus>()
-              .checkIfUserSelectedShop()
-              .then((userSelectedShop) {
+          serviceLocator<CheckUserLoginStatus>().checkIfUserSelectedShop().then((userSelectedShop) {
             if (userSelectedShop != null) {
-              context.read<SelectShopBloc>().add(
-                  SelectShopEvent.onSelectShopRefresh(shop: userSelectedShop));
+              global.apiShopID = userSelectedShop.guidfixed;
+              context.read<SelectShopBloc>().add(SelectShopEvent.onSelectShopRefresh(shop: userSelectedShop));
 
-              context.router.pushAndPopUntil(const InitShopRoute(),
-                  predicate: (route) => false);
+              context.router.pushAndPopUntil(const InitShopRoute(), predicate: (route) => false);
             } else {
-              context.router.pushAndPopUntil(const SelectShopRoute(),
-                  predicate: (route) => false);
+              context.router.pushAndPopUntil(const SelectShopRoute(), predicate: (route) => false);
             }
           });
         } else {
-          context.router.pushAndPopUntil(const AuthenticationRoute(),
-              predicate: (route) => false);
+          context.router.pushAndPopUntil(const AuthenticationRoute(), predicate: (route) => false);
         }
       });
     });

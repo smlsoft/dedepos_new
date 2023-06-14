@@ -27,9 +27,7 @@ Future syncProductCategory(data) async {
   List<ProductCategoryObjectBoxStruct> manyForInsert = [];
 
   // Delete
-  List<ItemRemoveModel> removes = (data["remove"] as List)
-      .map((removeCate) => ItemRemoveModel.fromJson(removeCate))
-      .toList();
+  List<ItemRemoveModel> removes = (data["remove"] as List).map((removeCate) => ItemRemoveModel.fromJson(removeCate)).toList();
   for (var removeData in removes) {
     try {
       global.syncTimeIntervalSecond = 1;
@@ -40,9 +38,7 @@ Future syncProductCategory(data) async {
     }
   }
   // Insert
-  List<SyncCategoryModel> newDataList = (data["new"] as List)
-      .map((newCate) => SyncCategoryModel.fromJson(newCate))
-      .toList();
+  List<SyncCategoryModel> newDataList = (data["new"] as List).map((newCate) => SyncCategoryModel.fromJson(newCate)).toList();
   for (var newData in newDataList) {
     global.syncTimeIntervalSecond = 1;
     removeMany.add(newData.guidfixed);
@@ -62,8 +58,7 @@ Future syncProductCategory(data) async {
     // ทดสอบ รูป
     //newProduct.image_url = global.getImageForTest();
 
-    serviceLocator<Log>().debug(
-        "Sync Product Category : ${newData.guidfixed} ${newData.names![0].name} ${newData.parentguid}");
+    serviceLocator<Log>().debug("Sync Product Category : ${newData.guidfixed} ${newData.names![0].name} ${newData.parentguid}");
     newProduct.names.add(newData.names![0].name);
     manyForInsert.add(newProduct);
   }
@@ -80,11 +75,7 @@ Future syncProductCategory(data) async {
     final box = global.objectBoxStore.box<ProductCategoryObjectBoxStruct>();
     List<ProductCategoryObjectBoxStruct> selectCategory = box.getAll();
     for (var category in selectCategory) {
-      final count = box
-          .query(ProductCategoryObjectBoxStruct_.parent_guid_fixed
-              .equals(category.guid_fixed))
-          .build()
-          .count();
+      final count = box.query(ProductCategoryObjectBoxStruct_.parent_guid_fixed.equals(category.guid_fixed)).build().count();
       if (count > 0) {
         category.category_count = count;
         box.put(category);
@@ -93,8 +84,7 @@ Future syncProductCategory(data) async {
   }
 }
 
-void syncProductBarcode(List<ItemRemoveModel> removeList,
-    List<SyncProductBarcodeModel> newDataList) {
+void syncProductBarcode(List<ItemRemoveModel> removeList, List<SyncProductBarcodeModel> newDataList) {
   List<String> manyForDelete = [];
   List<ProductBarcodeObjectBoxStruct> manyForInsert = [];
 
@@ -196,13 +186,9 @@ void syncProductBarcode(List<ItemRemoveModel> removeList,
     manyForInsert.add(newBarcode);
     global.syncRefreshProductBarcode = true;
     // Update ข้อมูลใน Memory
-    for (int index = 0;
-        index < global.productCategoryCodeSelected.length;
-        index++) {
-      if (global.productCategoryCodeSelected[index].guid_fixed ==
-          newData.guidfixed) {
-        global.productCategoryCodeSelected[index].names
-            .add(newData.names[0].name);
+    for (int index = 0; index < global.productCategoryCodeSelected.length; index++) {
+      if (global.productCategoryCodeSelected[index].guid_fixed == newData.guidfixed) {
+        global.productCategoryCodeSelected[index].names.add(newData.names[0].name);
         global.productCategoryCodeSelected[index].image_url = newData.imageuri;
 
         /*global.productGroupCodeSelected[_index].xorder =
@@ -241,9 +227,7 @@ Future syncPrinter(data) async {
   List<PrinterObjectBoxStruct> manyForInsert = [];
 
   // Delete
-  List<ItemRemoveModel> removes = (data["remove"] as List)
-      .map((removeCate) => ItemRemoveModel.fromJson(removeCate))
-      .toList();
+  List<ItemRemoveModel> removes = (data["remove"] as List).map((removeCate) => ItemRemoveModel.fromJson(removeCate)).toList();
   for (var removeData in removes) {
     try {
       global.syncTimeIntervalSecond = 1;
@@ -254,9 +238,7 @@ Future syncPrinter(data) async {
     }
   }
   // Insert
-  List<SyncPrinterModel> newDataList = (data["new"] as List)
-      .map((newCate) => SyncPrinterModel.fromJson(newCate))
-      .toList();
+  List<SyncPrinterModel> newDataList = (data["new"] as List).map((newCate) => SyncPrinterModel.fromJson(newCate)).toList();
   for (var newData in newDataList) {
     global.syncTimeIntervalSecond = 1;
     manyForDelete.add(newData.guidfixed);
@@ -298,99 +280,80 @@ flutter: staff 2023-02-14T02:39:22Z
 
 Future syncMasterData() async {
   ApiRepository apiRepository = ApiRepository();
-
-  String lastUpdateTime = global.appStorage.read(global.syncCategoryTimeName) ??
-      global.syncDateBegin;
   global.syncDataProcess = true;
-  List<SyncMasterStatusModel> masterStatus =
-      await apiRepository.serverMasterStatus();
-  {
-    // หมวดสินค้า
-    final productCategoryCount = ProductCategoryHelper().count();
-    if (productCategoryCount == 0) {
-      lastUpdateTime = global.syncDateBegin;
-    }
-    lastUpdateTime = DateFormat(global.dateFormatSync)
-        .format(DateTime.parse(lastUpdateTime));
-    var getLastUpdateTime =
-        global.syncFindLastUpdate(masterStatus, "productcategory");
-    if (lastUpdateTime != getLastUpdateTime) {
-      serviceLocator<Log>().debug("serverProductCategory Start");
-      await apiRepository
-          .serverProductCategory(
-              offset: 0, limit: 1000, lastupdate: lastUpdateTime)
-          .then((value) {
-        if (value.success) {
-          syncProductCategory(value.data["productcategory"]).then((_) {
-            //print("Update syncCategoryTimeName Success");
-            global.appStorage
-                .write(global.syncCategoryTimeName, getLastUpdateTime);
-          });
-        }
-      });
-      serviceLocator<Log>().debug(
-          "serverProductCategory End : ${ProductCategoryHelper().count()}");
-    }
+  String lastUpdateTime = global.appStorage.read(global.syncCategoryTimeName) ?? global.syncDateBegin;
+  if (ProductCategoryHelper().count() == 0) {
+    lastUpdateTime = global.syncDateBegin;
   }
-  {
-    // Sync Barcode
-    String lastUpdateTime =
-        global.appStorage.read(global.syncProductBarcodeTimeName) ??
-            global.syncDateBegin;
-    if (ProductBarcodeHelper().count() == 0) {
-      lastUpdateTime = global.syncDateBegin;
-    }
-    lastUpdateTime = DateFormat(global.dateFormatSync)
-        .format(DateTime.parse(lastUpdateTime));
-    var getLastUpdateTime =
-        global.syncFindLastUpdate(masterStatus, "productbarcode");
-    if (lastUpdateTime != getLastUpdateTime) {
-      serviceLocator<Log>().debug("serverProductBarcode Start");
-      // Test
-      // lastUpdateTime = global.syncDateBegin;
-      //
-      var loop = true;
-      var offset = 0;
-      var limit = 10000;
-      while (loop) {
-        await apiRepository
-            .serverProductBarcode(
-                offset: offset, limit: limit, lastupdate: lastUpdateTime)
-            .then((value) {
+  try {
+    List<SyncMasterStatusModel> masterStatus = await apiRepository.serverMasterStatus();
+    {
+      // หมวดสินค้า
+      final productCategoryCount = ProductCategoryHelper().count();
+      if (productCategoryCount == 0) {
+        lastUpdateTime = global.syncDateBegin;
+      }
+      lastUpdateTime = DateFormat(global.dateFormatSync).format(DateTime.parse(lastUpdateTime));
+      var getLastUpdateTime = global.syncFindLastUpdate(masterStatus, "productcategory");
+      if (lastUpdateTime != getLastUpdateTime) {
+        serviceLocator<Log>().debug("serverProductCategory Start");
+        await apiRepository.serverProductCategory(offset: 0, limit: 1000, lastupdate: lastUpdateTime).then((value) {
           if (value.success) {
-            var dataList = value.data["productbarcode"];
-            List<ItemRemoveModel> removeList = (dataList["remove"] as List)
-                .map((removeCate) => ItemRemoveModel.fromJson(removeCate))
-                .toList();
-            List<SyncProductBarcodeModel> newDataList =
-                (dataList["new"] as List)
-                    .map((newCate) => SyncProductBarcodeModel.fromJson(newCate))
-                    .toList();
-            serviceLocator<Log>().debug(
-                "offset : $offset remove : ${removeList.length} insert : ${newDataList.length}");
-            if (newDataList.isEmpty && removeList.isEmpty) {
-              loop = false;
-            } else {
-              syncProductBarcode(removeList, newDataList);
-            }
-          } else {
-            serviceLocator<Log>().debug(
-                "************************************************* Error");
-            loop = false;
+            syncProductCategory(value.data["productcategory"]).then((_) {
+              //print("Update syncCategoryTimeName Success");
+              global.appStorage.write(global.syncCategoryTimeName, getLastUpdateTime);
+            });
           }
         });
-        offset += limit;
+        serviceLocator<Log>().debug("serverProductCategory End : ${ProductCategoryHelper().count()}");
       }
-      serviceLocator<Log>().debug(
-          "Update syncProductBarcodeTimeName Success : ${ProductBarcodeHelper().count()}");
-      global.appStorage
-          .write(global.syncProductBarcodeTimeName, getLastUpdateTime);
     }
+    {
+      // Sync Barcode
+      String lastUpdateTime = global.appStorage.read(global.syncProductBarcodeTimeName) ?? global.syncDateBegin;
+      if (ProductBarcodeHelper().count() == 0) {
+        lastUpdateTime = global.syncDateBegin;
+      }
+      lastUpdateTime = DateFormat(global.dateFormatSync).format(DateTime.parse(lastUpdateTime));
+      var getLastUpdateTime = global.syncFindLastUpdate(masterStatus, "productbarcode");
+      if (lastUpdateTime != getLastUpdateTime) {
+        serviceLocator<Log>().debug("serverProductBarcode Start");
+        // Test
+        // lastUpdateTime = global.syncDateBegin;
+        //
+        var loop = true;
+        var offset = 0;
+        var limit = 10000;
+        while (loop) {
+          await apiRepository.serverProductBarcode(offset: offset, limit: limit, lastupdate: lastUpdateTime).then((value) {
+            if (value.success) {
+              var dataList = value.data["productbarcode"];
+              List<ItemRemoveModel> removeList = (dataList["remove"] as List).map((removeCate) => ItemRemoveModel.fromJson(removeCate)).toList();
+              List<SyncProductBarcodeModel> newDataList = (dataList["new"] as List).map((newCate) => SyncProductBarcodeModel.fromJson(newCate)).toList();
+              serviceLocator<Log>().debug("offset : $offset remove : ${removeList.length} insert : ${newDataList.length}");
+              if (newDataList.isEmpty && removeList.isEmpty) {
+                loop = false;
+              } else {
+                syncProductBarcode(removeList, newDataList);
+              }
+            } else {
+              serviceLocator<Log>().debug("************************************************* Error");
+              loop = false;
+            }
+          });
+          offset += limit;
+        }
+        serviceLocator<Log>().debug("Update syncProductBarcodeTimeName Success : ${ProductBarcodeHelper().count()}");
+        global.appStorage.write(global.syncProductBarcodeTimeName, getLastUpdateTime);
+      }
+    }
+    syncEmployeeCompare(masterStatus);
+    syncBankCompare(masterStatus);
+    global.syncDataSuccess = true;
+    global.syncDataProcess = false;
+  } catch (e) {
+    global.syncDataProcess = false;
   }
-  syncEmployeeCompare(masterStatus);
-  syncBankCompare(masterStatus);
-  global.syncDataSuccess = true;
-  global.syncDataProcess = false;
 }
 
 Future syncMasterProcess() async {
@@ -402,15 +365,12 @@ Future syncMasterProcess() async {
         if (global.loginProcess == false) {
           global.loginProcess = true;
           UserRepository userRepository = UserRepository();
-          await userRepository
-              .authenUser(global.apiUserName, global.apiUserPassword)
-              .then((result) async {
+          await userRepository.authenUser(global.apiUserName, global.apiUserPassword).then((result) async {
             if (result.success) {
               global.apiConnected = true;
               global.appStorage.write("token", result.data["token"]);
               serviceLocator<Log>().debug("Login Success");
-              ApiResponse selectShop =
-                  await userRepository.selectShop(global.apiShopID);
+              ApiResponse selectShop = await userRepository.selectShop(global.apiShopID);
               if (selectShop.success) {
                 serviceLocator<Log>().debug("Select Shop Success");
                 global.loginSuccess = true;
@@ -423,9 +383,7 @@ Future syncMasterProcess() async {
           });
         }
       }
-      if (global.apiConnected == true &&
-          global.loginSuccess == true &&
-          global.syncDataProcess == false) {
+      if (global.apiConnected == true && global.loginSuccess == true && global.syncDataProcess == false) {
         syncMasterData();
       }
     }

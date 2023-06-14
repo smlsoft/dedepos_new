@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dedepos/db/product_barcode_helper.dart';
 import 'package:dedepos/routes/app_routers.dart';
 import 'package:flutter/material.dart';
 import 'package:dedepos/global.dart' as global;
@@ -13,10 +14,20 @@ class InitShopScreen extends StatefulWidget {
 }
 
 class _InitShopScreenState extends State<InitShopScreen> {
+  int loadtime = 3;
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
+
+    if (ProductBarcodeHelper().count() == 0) {
+      loadtime = 5;
+    }
+
+    Future.delayed(const Duration(seconds: 1), () {
+      global.apiUserName = global.appStorage.read("apiUserName");
+      global.apiUserPassword = global.appStorage.read("apiUserPassword");
+
       preparePosScreen().then((_) {
         if (global.appMode == global.AppModeEnum.posRemote) {
           Navigator.of(context).pushReplacementNamed('client');
@@ -28,8 +39,10 @@ class _InitShopScreenState extends State<InitShopScreen> {
           //         posScreenMode: global.PosScreenModeEnum.posSale),
           //   ),
           // );
-          context.router.pushAndPopUntil(const DashboardRoute(),
-              predicate: (route) => false);
+
+          Future.delayed(Duration(seconds: loadtime), () {
+            context.router.pushAndPopUntil(const DashboardRoute(), predicate: (route) => false);
+          });
         }
       });
     });

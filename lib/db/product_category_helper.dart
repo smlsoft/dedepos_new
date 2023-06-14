@@ -16,75 +16,42 @@ class ProductCategoryHelper {
     box.putMany(values);
   }
 
-  Future<List<ProductCategoryObjectBoxStruct>>
-      selectByParentCategoryGuidOrderByXorder({String parentGuid = ""}) async {
+  Future<List<ProductCategoryObjectBoxStruct>> selectByParentCategoryGuidOrderByXorder({String parentGuid = ""}) async {
     if (global.appMode == global.AppModeEnum.posRemote) {
-      HttpParameterModel jsonParameter =
-          HttpParameterModel(parentGuid: parentGuid);
-      HttpGetDataModel json = HttpGetDataModel(
-          code: "selectByParentCategoryGuidOrderByXorder",
-          json: jsonEncode(jsonParameter.toJson()));
-      String result =
-          await global.getFromServer(json: jsonEncode(json.toJson()));
-      return (jsonDecode(result) as List)
-          .map((e) => ProductCategoryObjectBoxStruct.fromJson(e))
-          .toList();
+      HttpParameterModel jsonParameter = HttpParameterModel(parentGuid: parentGuid);
+      HttpGetDataModel json = HttpGetDataModel(code: "selectByParentCategoryGuidOrderByXorder", json: jsonEncode(jsonParameter.toJson()));
+      String result = await global.getFromServer(json: jsonEncode(json.toJson()));
+      return (jsonDecode(result) as List).map((e) => ProductCategoryObjectBoxStruct.fromJson(e)).toList();
     } else {
-      return (box.query(ProductCategoryObjectBoxStruct_.parent_guid_fixed
-              .equals(parentGuid))
-            ..order(ProductCategoryObjectBoxStruct_.xorder))
-          .build()
-          .find();
+      return (box.query(ProductCategoryObjectBoxStruct_.parent_guid_fixed.equals(parentGuid))..order(ProductCategoryObjectBoxStruct_.xorder)).build().find();
     }
   }
 
-  Future<ProductCategoryObjectBoxStruct?> selectByCategoryGuidFindFirst(
-      String guid) async {
+  Future<ProductCategoryObjectBoxStruct?> selectByCategoryGuidFindFirst(String guid) async {
     if (global.appMode == global.AppModeEnum.posRemote) {
       HttpParameterModel jsonParameter = HttpParameterModel(guid: guid);
-      HttpGetDataModel json = HttpGetDataModel(
-          code: "selectByCategoryGuidFindFirst",
-          json: jsonEncode(jsonParameter.toJson()));
-      String result =
-          await global.getFromServer(json: jsonEncode(json.toJson()));
+      HttpGetDataModel json = HttpGetDataModel(code: "selectByCategoryGuidFindFirst", json: jsonEncode(jsonParameter.toJson()));
+      String result = await global.getFromServer(json: jsonEncode(json.toJson()));
       return ProductCategoryObjectBoxStruct.fromJson(jsonDecode(result));
     } else {
-      return box
-          .query(ProductCategoryObjectBoxStruct_.guid_fixed.equals(guid))
-          .build()
-          .findFirst();
+      return box.query(ProductCategoryObjectBoxStruct_.guid_fixed.equals(guid)).build().findFirst();
     }
   }
 
-  Future<List<ProductCategoryObjectBoxStruct>> selectByCategoryParentGuid(
-      String parentGuid) async {
+  Future<List<ProductCategoryObjectBoxStruct>> selectByCategoryParentGuid(String parentGuid) async {
     if (global.appMode == global.AppModeEnum.posRemote) {
-      HttpParameterModel jsonParameter =
-          HttpParameterModel(parentGuid: parentGuid);
-      HttpGetDataModel json = HttpGetDataModel(
-          code: "selectByCategoryParentGuid",
-          json: jsonEncode(jsonParameter.toJson()));
-      String result =
-          await global.getFromServer(json: jsonEncode(json.toJson()));
-      return (jsonDecode(result) as List)
-          .map((e) => ProductCategoryObjectBoxStruct.fromJson(e))
-          .toList();
+      HttpParameterModel jsonParameter = HttpParameterModel(parentGuid: parentGuid);
+      HttpGetDataModel json = HttpGetDataModel(code: "selectByCategoryParentGuid", json: jsonEncode(jsonParameter.toJson()));
+      String result = await global.getFromServer(json: jsonEncode(json.toJson()));
+      return (jsonDecode(result) as List).map((e) => ProductCategoryObjectBoxStruct.fromJson(e)).toList();
     } else {
-      return box
-          .query(ProductCategoryObjectBoxStruct_.parent_guid_fixed
-              .equals(parentGuid))
-          .order(ProductCategoryObjectBoxStruct_.xorder)
-          .build()
-          .find();
+      return box.query(ProductCategoryObjectBoxStruct_.parent_guid_fixed.equals(parentGuid)).order(ProductCategoryObjectBoxStruct_.xorder).build().find();
     }
   }
 
   bool deleteByGuidFixed(String guidfixed) {
     bool result = false;
-    final find = box
-        .query(ProductCategoryObjectBoxStruct_.guid_fixed.equals(guidfixed))
-        .build()
-        .findFirst();
+    final find = box.query(ProductCategoryObjectBoxStruct_.guid_fixed.equals(guidfixed)).build().findFirst();
     if (find != null) {
       result = box.remove(find.id);
     }
@@ -108,10 +75,7 @@ class ProductCategoryHelper {
 
   bool deleteByGuid(String guid) {
     bool result = false;
-    final find = box
-        .query(ProductCategoryObjectBoxStruct_.guid_fixed.equals(guid))
-        .build()
-        .findFirst();
+    final find = box.query(ProductCategoryObjectBoxStruct_.guid_fixed.equals(guid)).build().findFirst();
     if (find != null) {
       result = box.remove(find.id);
     }

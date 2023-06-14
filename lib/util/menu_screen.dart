@@ -31,32 +31,16 @@ class _MenuScreenState extends State<MenuScreen> {
   TextEditingController empCode = TextEditingController();
   TextEditingController userCode = TextEditingController();
   TextEditingController password = TextEditingController();
-  List<String> countryNames = [
-    "English",
-    "Thai",
-    "Laos",
-    "Chinese",
-    "Japan",
-    "Korea"
-  ];
+  List<String> countryNames = ["English", "Thai", "Laos", "Chinese", "Japan", "Korea"];
   List<String> countryCodes = ["en", "th", "lo", "ch", "jp", "kr"];
 
   var appBarHeight = AppBar().preferredSize.height;
 
   List<Widget> menuForVisit() {
     return [
-      menuItem(
-          icon: Icons.list_alt_outlined,
-          title: 'กำหนดพิกัด GPS',
-          callBack: () {}),
-      menuItem(
-          icon: Icons.list_alt_outlined,
-          title: 'ถ่ายรูปหน้าร้าน',
-          callBack: () {}),
-      menuItem(
-          icon: Icons.list_alt_outlined,
-          title: 'ถ่ายรูปสินค้า',
-          callBack: () {}),
+      menuItem(icon: Icons.list_alt_outlined, title: 'กำหนดพิกัด GPS', callBack: () {}),
+      menuItem(icon: Icons.list_alt_outlined, title: 'ถ่ายรูปหน้าร้าน', callBack: () {}),
+      menuItem(icon: Icons.list_alt_outlined, title: 'ถ่ายรูปสินค้า', callBack: () {}),
     ];
   }
 
@@ -106,8 +90,7 @@ class _MenuScreenState extends State<MenuScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const PosScreen(
-                    posScreenMode: global.PosScreenModeEnum.posSale),
+                builder: (context) => const PosScreen(posScreenMode: global.PosScreenModeEnum.posSale),
               ),
             );
           }),
@@ -118,8 +101,7 @@ class _MenuScreenState extends State<MenuScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const PosScreen(
-                    posScreenMode: global.PosScreenModeEnum.posReturn),
+                builder: (context) => const PosScreen(posScreenMode: global.PosScreenModeEnum.posReturn),
               ),
             );
           }),
@@ -135,8 +117,7 @@ class _MenuScreenState extends State<MenuScreen> {
               insetPadding: const EdgeInsets.all(0),
               contentPadding: const EdgeInsets.all(0),
               backgroundColor: Colors.transparent,
-              content: StatefulBuilder(
-                  builder: (BuildContext context, StateSetter setState) {
+              content: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
                 return shiftAndMoneyScreen(mode: mode);
               }));
         });
@@ -171,11 +152,7 @@ class _MenuScreenState extends State<MenuScreen> {
     ];
   }
 
-  Widget menuItem(
-      {required IconData icon,
-      required String title,
-      Color color = Colors.white,
-      required Function callBack}) {
+  Widget menuItem({required IconData icon, required String title, Color color = Colors.white, required Function callBack}) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.black,
@@ -232,9 +209,7 @@ class _MenuScreenState extends State<MenuScreen> {
     } catch (_) {
       global.userLanguage = "";
     }
-    menuMode = (global.userLanguage != null && global.userLanguage!.isNotEmpty)
-        ? 0
-        : 1;
+    menuMode = (global.userLanguage != null && global.userLanguage!.isNotEmpty) ? 0 : 1;
 
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 
@@ -304,6 +279,7 @@ class _MenuScreenState extends State<MenuScreen> {
               ElevatedButton(
                   onPressed: () {
                     setState(() {
+                      global.loginSuccess = false;
                       global.userLoginCode = "";
                       global.userLoginName = "";
                     });
@@ -324,14 +300,9 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
             ],
           ),
-          margin:
-              const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          margin: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
           padding: const EdgeInsets.all(8.0),
-          child: Row(children: [
-            Text(global.deviceId),
-            const Spacer(),
-            Text(global.deviceName)
-          ])),
+          child: Row(children: [Text(global.deviceId), const Spacer(), Text(global.deviceName)])),
     ]);
 
     return MaterialApp(
@@ -342,8 +313,7 @@ class _MenuScreenState extends State<MenuScreen> {
           appBar: AppBar(
               centerTitle: true,
               foregroundColor: Colors.white,
-              title: Text(
-                  "${global.language('dashboard')} : ${(global.appMode == global.AppModeEnum.posTerminal) ? global.language("pos_terminal") : global.language("pos_remote")}"),
+              title: Text("${global.language('dashboard')} : ${(global.appMode == global.AppModeEnum.posTerminal) ? global.language("pos_terminal") : global.language("pos_remote")}"),
               actions: (menuMode == 1)
                   ? []
                   : [
@@ -352,8 +322,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.green, width: 2),
                             ),
-                            child: Image.asset(
-                                'assets/flags/${global.userLanguage}.png')),
+                            child: Image.asset('assets/flags/${global.userLanguage}.png')),
                         onPressed: () {
                           setState(() {
                             menuMode = 1;
@@ -369,8 +338,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const PrinterConfigScreen(),
+                                builder: (context) => const PrinterConfigScreen(),
                               ),
                             );
                           }
@@ -404,9 +372,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   ? Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          colorFilter: ColorFilter.mode(
-                              Colors.black.withOpacity(0.25),
-                              BlendMode.dstATop),
+                          colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.25), BlendMode.dstATop),
                           image: const AssetImage('assets/images/login.png'),
                           fit: BoxFit.cover,
                         ),
@@ -417,8 +383,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 1,
                             blurRadius: 7,
-                            offset: const Offset(
-                                0, 3), // changes position of shadow
+                            offset: const Offset(0, 3), // changes position of shadow
                           ),
                         ],
                       ),
@@ -437,8 +402,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                       color: Colors.grey.withOpacity(0.5),
                                       spreadRadius: 10,
                                       blurRadius: 7,
-                                      offset: const Offset(
-                                          0, 3), // changes position of shadow
+                                      offset: const Offset(0, 3), // changes position of shadow
                                     ),
                                   ],
                                 ),
@@ -465,16 +429,12 @@ class _MenuScreenState extends State<MenuScreen> {
                                     shrinkWrap: true,
                                     physics: const BouncingScrollPhysics(),
                                     itemCount: menuPosList.length,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount:
-                                          MediaQuery.of(context).size.width ~/
-                                              150,
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: MediaQuery.of(context).size.width ~/ 150,
                                       crossAxisSpacing: 5.0,
                                       mainAxisSpacing: 5.0,
                                     ),
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
+                                    itemBuilder: (BuildContext context, int index) {
                                       return menuPosList[index];
                                     },
                                   ),
@@ -487,16 +447,12 @@ class _MenuScreenState extends State<MenuScreen> {
                                     shrinkWrap: true,
                                     physics: const BouncingScrollPhysics(),
                                     itemCount: menuShiftList.length,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount:
-                                          MediaQuery.of(context).size.width ~/
-                                              150,
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: MediaQuery.of(context).size.width ~/ 150,
                                       crossAxisSpacing: 5.0,
                                       mainAxisSpacing: 5.0,
                                     ),
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
+                                    itemBuilder: (BuildContext context, int index) {
                                       return menuShiftList[index];
                                     },
                                   ),
@@ -510,16 +466,12 @@ class _MenuScreenState extends State<MenuScreen> {
                                       shrinkWrap: true,
                                       physics: const BouncingScrollPhysics(),
                                       itemCount: menuVisitList.length,
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount:
-                                            MediaQuery.of(context).size.width ~/
-                                                150,
+                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: MediaQuery.of(context).size.width ~/ 150,
                                         crossAxisSpacing: 5.0,
                                         mainAxisSpacing: 5.0,
                                       ),
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
+                                      itemBuilder: (BuildContext context, int index) {
                                         return menuVisitList[index];
                                       },
                                     ),
@@ -535,10 +487,7 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  PopupMenuItem buildPopupMenuItem(
-      {required String title,
-      required IconData iconData,
-      required int valueCode}) {
+  PopupMenuItem buildPopupMenuItem({required String title, required IconData iconData, required int valueCode}) {
     return PopupMenuItem(
       value: valueCode,
       child: Row(
@@ -564,8 +513,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
   void backSpace() {
     if (receiveAmount.text.isNotEmpty) {
-      receiveAmount.text =
-          receiveAmount.text.substring(0, receiveAmount.text.length - 1);
+      receiveAmount.text = receiveAmount.text.substring(0, receiveAmount.text.length - 1);
     }
   }
 
@@ -590,8 +538,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             global.language("login"),
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Padding(
@@ -624,8 +571,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           child: Row(
                             children: [
                               ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.amber.shade600),
+                                style: ElevatedButton.styleFrom(backgroundColor: Colors.amber.shade600),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
@@ -633,8 +579,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               ),
                               const Spacer(),
                               ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green.shade600),
+                                style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade600),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
@@ -653,10 +598,7 @@ class _MenuScreenState extends State<MenuScreen> {
         });
   }
 
-  void showMsgDialog(
-      {required String header,
-      required String msg,
-      required String type}) async {
+  void showMsgDialog({required String header, required String msg, required String type}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -705,17 +647,14 @@ class _MenuScreenState extends State<MenuScreen> {
                             Container(
                               padding: const EdgeInsets.all(2),
                               constraints: const BoxConstraints(maxWidth: 250),
-                              width: (MediaQuery.of(context).size.width / 100) *
-                                  40,
+                              width: (MediaQuery.of(context).size.width / 100) * 40,
                               child: Column(
                                 children: [
                                   const Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: Text(
                                       "receive_money",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
+                                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                   Padding(
@@ -736,9 +675,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                       readOnly: true,
                                       controller: receiveAmount,
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.digitsOnly
-                                      ],
+                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                       decoration: const InputDecoration(
                                         icon: Icon(Icons.money),
                                         hintText: 'จำนวนเงิน',
@@ -751,9 +688,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                     child: Row(
                                       children: [
                                         ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  Colors.amber.shade600),
+                                          style: ElevatedButton.styleFrom(backgroundColor: Colors.amber.shade600),
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
@@ -761,9 +696,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                         ),
                                         const Spacer(),
                                         ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  Colors.green.shade600),
+                                          style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade600),
                                           onPressed: () async {
                                             // String docNumber =
                                             //     const Uuid().v4();
@@ -790,15 +723,9 @@ class _MenuScreenState extends State<MenuScreen> {
 
                                             Navigator.of(context).pop();
 
-                                            global.playSound(
-                                                word:
-                                                    "รับเงินทอน จำนวน ${receiveAmount.text} ${global.language("money_symbol")}");
+                                            global.playSound(word: "รับเงินทอน จำนวน ${receiveAmount.text} ${global.language("money_symbol")}");
 
-                                            showMsgDialog(
-                                                header: "บันทึกสำเร็จ",
-                                                msg:
-                                                    "รับเงินทอน จำนวน ${receiveAmount.text} ${global.language("money_symbol")}",
-                                                type: "success");
+                                            showMsgDialog(header: "บันทึกสำเร็จ", msg: "รับเงินทอน จำนวน ${receiveAmount.text} ${global.language("money_symbol")}", type: "success");
                                           },
                                           child: const Text("บันทึก"),
                                         ),
@@ -810,8 +737,7 @@ class _MenuScreenState extends State<MenuScreen> {
                             ),
                             Container(
                               constraints: const BoxConstraints(maxWidth: 250),
-                              width: (MediaQuery.of(context).size.width / 100) *
-                                  50,
+                              width: (MediaQuery.of(context).size.width / 100) * 50,
                               child: Column(
                                 children: <Widget>[
                                   Align(
@@ -819,156 +745,116 @@ class _MenuScreenState extends State<MenuScreen> {
                                     child: Column(children: [
                                       SizedBox(
                                           height: 60,
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: <Widget>[
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: '7',
-                                                      callBack: () => {
-                                                        textInputChanged("7")
-                                                      },
-                                                    )),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: '8',
-                                                      callBack: () => {
-                                                        textInputChanged("8")
-                                                      },
-                                                    )),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: '9',
-                                                      callBack: () => {
-                                                        textInputChanged("9")
-                                                      },
-                                                    )),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: 'x',
-                                                      callBack: () => {},
-                                                    )),
-                                              ])),
+                                          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: '7',
+                                                  callBack: () => {textInputChanged("7")},
+                                                )),
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: '8',
+                                                  callBack: () => {textInputChanged("8")},
+                                                )),
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: '9',
+                                                  callBack: () => {textInputChanged("9")},
+                                                )),
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: 'x',
+                                                  callBack: () => {},
+                                                )),
+                                          ])),
                                       SizedBox(
                                           height: 60,
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: <Widget>[
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: '4',
-                                                      callBack: () => {
-                                                        textInputChanged("4")
-                                                      },
-                                                    )),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: '5',
-                                                      callBack: () => {
-                                                        textInputChanged("5")
-                                                      },
-                                                    )),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: '6',
-                                                      callBack: () => {
-                                                        textInputChanged("6")
-                                                      },
-                                                    )),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: '+',
-                                                      callBack: () => {},
-                                                    )),
-                                              ])),
+                                          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: '4',
+                                                  callBack: () => {textInputChanged("4")},
+                                                )),
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: '5',
+                                                  callBack: () => {textInputChanged("5")},
+                                                )),
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: '6',
+                                                  callBack: () => {textInputChanged("6")},
+                                                )),
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: '+',
+                                                  callBack: () => {},
+                                                )),
+                                          ])),
                                       SizedBox(
                                           height: 60,
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: <Widget>[
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: '1',
-                                                      callBack: () => {
-                                                        textInputChanged("1")
-                                                      },
-                                                    )),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: '2',
-                                                      callBack: () => {
-                                                        textInputChanged("2")
-                                                      },
-                                                    )),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: '3',
-                                                      callBack: () => {
-                                                        textInputChanged("3")
-                                                      },
-                                                    )),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: 'C',
-                                                      callBack: () =>
-                                                          {clearText()},
-                                                    )),
-                                              ])),
+                                          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: '1',
+                                                  callBack: () => {textInputChanged("1")},
+                                                )),
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: '2',
+                                                  callBack: () => {textInputChanged("2")},
+                                                )),
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: '3',
+                                                  callBack: () => {textInputChanged("3")},
+                                                )),
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: 'C',
+                                                  callBack: () => {clearText()},
+                                                )),
+                                          ])),
                                       SizedBox(
                                           height: 60,
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: <Widget>[
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: '0',
-                                                      callBack: () => {
-                                                        textInputChanged("0")
-                                                      },
-                                                    )),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      text: '.',
-                                                      callBack: () => {
-                                                        textInputChanged(".")
-                                                      },
-                                                    )),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      icon: Icons.backspace,
-                                                      callBack: () =>
-                                                          {backSpace()},
-                                                    )),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: NumPadButton(
-                                                      icon: Icons.expand,
-                                                      callBack: () => {},
-                                                    )),
-                                              ])),
+                                          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: '0',
+                                                  callBack: () => {textInputChanged("0")},
+                                                )),
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  text: '.',
+                                                  callBack: () => {textInputChanged(".")},
+                                                )),
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  icon: Icons.backspace,
+                                                  callBack: () => {backSpace()},
+                                                )),
+                                            Expanded(
+                                                flex: 2,
+                                                child: NumPadButton(
+                                                  icon: Icons.expand,
+                                                  callBack: () => {},
+                                                )),
+                                          ])),
                                     ]),
                                   ),
                                 ],

@@ -38,8 +38,7 @@ class ApiRepository {
     Dio client = Client().init();
 
     try {
-      String query =
-          "/master-sync/list?lastupdate=$lastupdate&module=employee&offset=$offset&limit=$limit&action=all";
+      String query = "/master-sync/list?lastupdate=$lastupdate&module=employee&offset=$offset&limit=$limit&action=all";
       final response = await client.get(query);
       try {
         final rawData = json.decode(response.toString());
@@ -65,8 +64,7 @@ class ApiRepository {
     Dio client = Client().init();
 
     try {
-      String query =
-          "/master-sync/list?lastupdate=$lastupdate&module=printer&offset=$offset&limit=$limit&action=all";
+      String query = "/master-sync/list?lastupdate=$lastupdate&module=printer&offset=$offset&limit=$limit&action=all";
       final response = await client.get(query);
       try {
         final rawData = json.decode(response.toString());
@@ -92,8 +90,7 @@ class ApiRepository {
     Dio client = Client().init();
 
     try {
-      String query =
-          "/master-sync/list?lastupdate=$lastupdate&module=productcategory&offset=$offset&limit=$limit&action=all";
+      String query = "/master-sync/list?lastupdate=$lastupdate&module=productcategory&offset=$offset&limit=$limit&action=all";
       final response = await client.get(query);
       try {
         final rawData = json.decode(response.toString());
@@ -119,8 +116,7 @@ class ApiRepository {
     Dio client = Client().init();
 
     try {
-      String query =
-          "/master-sync/list?lastupdate=$lastupdate&module=productbarcode&offset=$offset&limit=$limit&action=all";
+      String query = "/master-sync/list?lastupdate=$lastupdate&module=productbarcode&offset=$offset&limit=$limit&action=all";
       final response = await client.get(query);
       try {
         final rawData = json.decode(response.toString());
@@ -166,13 +162,11 @@ class ApiRepository {
     }
   }
 
-  Future<ApiResponse> getMasterUpdate(
-      {int page = 1, int limit = 50, String time = ""}) async {
+  Future<ApiResponse> getMasterUpdate({int page = 1, int limit = 50, String time = ""}) async {
     Dio client = Client().init();
 
     try {
-      final response = await client
-          .get('/master-sync?lastUpdate=$time&page=$page&limit=$limit');
+      final response = await client.get('/master-sync?lastUpdate=$time&page=$page&limit=$limit');
       try {
         final rawData = json.decode(response.toString());
 
@@ -196,13 +190,11 @@ class ApiRepository {
     }
   }
 
-  Future<ApiResponse> getInventoryFetchUpdate(
-      {int page = 0, int perPage = 1, String time = ""}) async {
+  Future<ApiResponse> getInventoryFetchUpdate({int page = 0, int perPage = 1, String time = ""}) async {
     Dio client = Client().init();
 
     try {
-      final response = await client.get(
-          '/inventory/fetchupdate?lastUpdate=$time&page=$page&limit=$perPage');
+      final response = await client.get('/inventory/fetchupdate?lastUpdate=$time&page=$page&limit=$perPage');
       try {
         final rawData = json.decode(response.toString());
 
@@ -226,13 +218,11 @@ class ApiRepository {
     }
   }
 
-  Future<ApiResponse> getCategoryFetchUpdate(
-      {int page = 0, int limit = 1, String time = ""}) async {
+  Future<ApiResponse> getCategoryFetchUpdate({int page = 0, int limit = 1, String time = ""}) async {
     Dio client = Client().init();
 
     try {
-      final response = await client.get(
-          '/category/fetchupdate?lastUpdate=$time&page=$page&limit=$limit');
+      final response = await client.get('/category/fetchupdate?lastUpdate=$time&page=$page&limit=$limit');
       try {
         final rawData = json.decode(response.toString());
 
@@ -256,13 +246,11 @@ class ApiRepository {
     }
   }
 
-  Future<ApiResponse> getMemberFetchUpdate(
-      {int page = 0, int perPage = 1, String time = ""}) async {
+  Future<ApiResponse> getMemberFetchUpdate({int page = 0, int perPage = 1, String time = ""}) async {
     Dio client = Client().init();
 
     try {
-      final response = await client.get(
-          '/member/fetchupdate?lastUpdate=$time&page=$page&limit=$perPage');
+      final response = await client.get('/member/fetchupdate?lastUpdate=$time&page=$page&limit=$perPage');
       try {
         final rawData = json.decode(response.toString());
 
@@ -286,13 +274,11 @@ class ApiRepository {
     }
   }
 
-  Future<ApiResponse> getPrinterFetchUpdate(
-      {int page = 0, int perPage = 1, String time = ""}) async {
+  Future<ApiResponse> getPrinterFetchUpdate({int page = 0, int perPage = 1, String time = ""}) async {
     Dio client = Client().init();
 
     try {
-      final response = await client.get(
-          '/restaurant/printer/fetchupdate?lastUpdate=$time&page=$page&limit=$perPage');
+      final response = await client.get('/restaurant/printer/fetchupdate?lastUpdate=$time&page=$page&limit=$perPage');
       try {
         final rawData = json.decode(response.toString());
 
@@ -316,13 +302,11 @@ class ApiRepository {
     }
   }
 
-  Future<ApiResponse> getTableFetchUpdate(
-      {int page = 0, int perPage = 1, String time = ""}) async {
+  Future<ApiResponse> getTableFetchUpdate({int page = 0, int perPage = 1, String time = ""}) async {
     Dio client = Client().init();
 
     try {
-      final response = await client.get(
-          '/restaurant/table/fetchupdate?lastUpdate=$time&page=$page&limit=$perPage');
+      final response = await client.get('/restaurant/table/fetchupdate?lastUpdate=$time&page=$page&limit=$perPage');
       try {
         final rawData = json.decode(response.toString());
 
@@ -346,13 +330,11 @@ class ApiRepository {
     }
   }
 
-  Future<ApiResponse> getZoneFetchUpdate(
-      {int page = 0, int perPage = 1, String time = ""}) async {
+  Future<ApiResponse> getZoneFetchUpdate({int page = 0, int perPage = 1, String time = ""}) async {
     Dio client = Client().init();
 
     try {
-      final response = await client.get(
-          '/restaurant/zone/fetchupdate?lastUpdate=$time&page=$page&limit=$perPage');
+      final response = await client.get('/restaurant/zone/fetchupdate?lastUpdate=$time&page=$page&limit=$perPage');
       try {
         final rawData = json.decode(response.toString());
 
@@ -384,8 +366,7 @@ class ApiRepository {
     Dio client = Client().init();
 
     try {
-      final response =
-          await client.get('/category?page=$page&limit=$perPage&q=$search');
+      final response = await client.get('/category?page=$page&limit=$perPage&q=$search');
       try {
         final rawData = json.decode(response.toString());
 
@@ -409,13 +390,11 @@ class ApiRepository {
     }
   }
 
-  Future<ApiResponse> getInventoryList(
-      {int page = 0, int perPage = 1, String search = ""}) async {
+  Future<ApiResponse> getInventoryList({int page = 0, int perPage = 1, String search = ""}) async {
     Dio client = Client().init();
 
     try {
-      final response =
-          await client.get('/inventory?page=$page&limit=$perPage&q=$search');
+      final response = await client.get('/inventory?page=$page&limit=$perPage&q=$search');
       try {
         final rawData = json.decode(response.toString());
 
@@ -475,8 +454,7 @@ class ApiRepository {
     Dio client = Client().init();
 
     try {
-      final response =
-          await client.get('/employee?page=$page&limit=$perPage&q=$search');
+      final response = await client.get('/employee?page=$page&limit=$perPage&q=$search');
       try {
         final rawData = json.decode(response.toString());
 

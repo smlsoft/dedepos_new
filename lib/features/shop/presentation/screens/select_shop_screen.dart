@@ -1,11 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dedepos/app/app.dart';
+import 'package:dedepos/db/bank_helper.dart';
+import 'package:dedepos/db/employee_helper.dart';
+import 'package:dedepos/db/product_barcode_helper.dart';
+import 'package:dedepos/db/product_category_helper.dart';
 import 'package:dedepos/features/authentication/auth.dart';
 import 'package:dedepos/features/shop/domain/entity/shop_user.dart';
 import 'package:dedepos/features/shop/presentation/bloc/select_shop_bloc.dart';
 import 'package:dedepos/routes/app_routers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dedepos/global.dart' as global;
 
 @RoutePage()
 class SelectShopScreen extends StatefulWidget {
@@ -38,9 +43,7 @@ class _SelectShopScreenState extends State<SelectShopScreen> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<SelectShopBloc>()
-        .add(const SelectShopEvent.onSelectShopStarted());
+    context.read<SelectShopBloc>().add(const SelectShopEvent.onSelectShopStarted());
     initializeSelection();
   }
 
@@ -56,8 +59,7 @@ class _SelectShopScreenState extends State<SelectShopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userAuthenticationState =
-        context.select((AuthenticationBloc bloc) => bloc.state);
+    final userAuthenticationState = context.select((AuthenticationBloc bloc) => bloc.state);
     late double textsize;
     if (Util.isLandscape(context)) {
       textsize = 25;
@@ -71,25 +73,35 @@ class _SelectShopScreenState extends State<SelectShopScreen> {
     }
     return MultiBlocListener(
       listeners: [
-        BlocListener<SelectShopBloc, SelectShopState>(
-            listener: (context, state) {
+        BlocListener<SelectShopBloc, SelectShopState>(listener: (context, state) {
           if (state is SelectShopSubmitSuccessState) {
             // read state and push next state
             // context.router.pushAndPopUntil(const DashboardRoute(),
             //     predicate: (route) => false);
-            context
-                .read<AuthenticationBloc>()
-                .add(AuthenticationEvent.authenticated(user: user));
+
+            if (global.appStorage.read("cache_shopid") != state.shop.guidfixed) {
+              ProductCategoryHelper().deleteAll();
+              ProductBarcodeHelper().deleteAll();
+              EmployeeHelper().deleteAll();
+              BankHelper().deleteAll();
+            }
+
+            print("ProductCategoryHelper:${ProductCategoryHelper().count()}");
+            print("ProductBarcodeHelper:${ProductBarcodeHelper().count()}");
+            print("EmployeeHelper:${EmployeeHelper().count()}");
+            print("BankHelper:${BankHelper().count()}");
+
+            global.apiShopID = state.shop.guidfixed;
+            global.appStorage.write("cache_shopid", state.shop.guidfixed);
+            global.loginSuccess = true;
+            context.read<AuthenticationBloc>().add(AuthenticationEvent.authenticated(user: user));
           }
         }),
-        BlocListener<AuthenticationBloc, AuthenticationState>(
-            listener: (context, state) {
+        BlocListener<AuthenticationBloc, AuthenticationState>(listener: (context, state) {
           if (state is AuthenticationInitialState) {
-            context.router.pushAndPopUntil(const AuthenticationRoute(),
-                predicate: (route) => false);
+            context.router.pushAndPopUntil(const AuthenticationRoute(), predicate: (route) => false);
           } else if (state is AuthenticationAuthenticatedState) {
-            context.router.pushAndPopUntil(const InitShopRoute(),
-                predicate: (route) => false);
+            context.router.pushAndPopUntil(const InitShopRoute(), predicate: (route) => false);
           }
         }),
       ],
@@ -99,10 +111,7 @@ class _SelectShopScreenState extends State<SelectShopScreen> {
             title: Center(
               child: Text(
                 ' ',
-                style: TextStyle(
-                    fontSize: textsize,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700),
+                style: TextStyle(fontSize: textsize, color: Colors.black, fontWeight: FontWeight.w700),
               ),
             ),
             leading: isSelectionMode
@@ -162,9 +171,7 @@ class _SelectShopScreenState extends State<SelectShopScreen> {
                 color: Colors.white,
                 icon: const Icon(Icons.logout),
                 onPressed: () {
-                  context
-                      .read<AuthenticationBloc>()
-                      .add(const UserLogoutEvent());
+                  context.read<AuthenticationBloc>().add(const UserLogoutEvent());
                 },
               ),
               // if (isSelectionMode)
@@ -207,10 +214,7 @@ class _SelectShopScreenState extends State<SelectShopScreen> {
                           padding: const EdgeInsets.only(top: 10),
                           child: Text(
                             'เลือกกิจการที่ต้องการทำรายการ ',
-                            style: TextStyle(
-                                fontSize: textsize,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700),
+                            style: TextStyle(fontSize: textsize, color: Colors.black, fontWeight: FontWeight.w700),
                           ),
                         ),
                         // IconButton(
@@ -307,9 +311,7 @@ class GridBuilderState extends State<GridBuilder> {
                   mainAxisExtent: 150,
                 ),
                 itemBuilder: (context, index) {
-                  return InkWell(
-                      onTap: () => _toggle(index),
-                      child: cardItem(state.shops[index]));
+                  return InkWell(onTap: () => _toggle(index), child: cardItem(state.shops[index]));
                 }),
           );
         }
@@ -323,9 +325,7 @@ class GridBuilderState extends State<GridBuilder> {
         elevation: 5,
         child: ListTile(
             onTap: (() {
-              context
-                  .read<SelectShopBloc>()
-                  .add(ShopSelectSubmit(shop: data.toShop));
+              context.read<SelectShopBloc>().add(ShopSelectSubmit(shop: data.toShop));
             }),
             title: SingleChildScrollView(
               child: Column(
@@ -345,8 +345,7 @@ class GridBuilderState extends State<GridBuilder> {
                         ),
                         Text(
                           data.name,
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -395,8 +394,7 @@ class _ListBuilderState extends State<ListBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SelectShopBloc, SelectShopState>(
-        builder: (context, state) {
+    return BlocBuilder<SelectShopBloc, SelectShopState>(builder: (context, state) {
       if (state is SelectShopLoadedState) {
         return Padding(
           padding: const EdgeInsets.only(left: 150, right: 150),
@@ -422,9 +420,7 @@ class _ListBuilderState extends State<ListBuilder> {
         elevation: 5,
         child: ListTile(
             onTap: (() {
-              context
-                  .read<SelectShopBloc>()
-                  .add(ShopSelectSubmit(shop: data.toShop));
+              context.read<SelectShopBloc>().add(ShopSelectSubmit(shop: data.toShop));
             }),
             title: Text(
               data.name,
